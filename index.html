@@ -10,6 +10,14 @@
 @media(max-width:1100px){.wrap{padding:0 22px}.filterbar{gap:16px;flex-wrap:wrap}.freshness{margin-left:0}.summary{grid-template-columns:repeat(4,1fr)}.stat{padding:17px}.metric{grid-template-columns:92px 1fr 56px;gap:10px}.rank-row{grid-template-columns:15px 126px 1fr 48px;gap:7px}.matrix-head{align-items:start;flex-wrap:wrap}}
 @media(max-width:750px){.wrap{padding:0 14px}header{padding-top:18px}.hero{margin-top:28px;align-items:start}h1{font-size:27px}.month-stamp{display:none}.top-links .source-link{display:none}.filterbar{padding:14px;gap:12px}.filter-group{justify-content:space-between;width:100%}.filterbar .select{min-width:180px}.freshness{font-size:10px}.summary{grid-template-columns:repeat(2,1fr);gap:9px}.stat-number{font-size:29px}.team-grid,.two-col{grid-template-columns:1fr}.team-card{padding:20px}.section-heading{margin-top:23px}.section-heading>p{display:none}.two-col{gap:14px}.matrix-tools{flex-wrap:wrap;width:100%}.search{flex:1;min-width:130px}.matrix-head{padding:18px}.legend{padding-left:18px;gap:10px}.chart-header{flex-wrap:wrap;padding:20px 18px 0}.chart-area{padding:10px 4px 0}.chart-footer{padding:0 18px 18px;gap:10px;flex-wrap:wrap}.footer{display:block}.footer a{display:block;margin-top:12px}.navigation{gap:18px}.rank-row{grid-template-columns:19px 155px 1fr 57px}.panel-head,.gap-list,.rank-list{padding-left:20px;padding-right:20px}}
 @media print{header{padding-bottom:40px;-webkit-print-color-adjust:exact;print-color-adjust:exact}.top-links,.navigation,.matrix-tools,.detail-overlay,.print-btn{display:none!important}.wrap{max-width:none;padding:0 10px}.card,.stat{break-inside:avoid}.table-scroll{overflow:visible}.cell,.stat,.card{-webkit-print-color-adjust:exact;print-color-adjust:exact}.matrix td{padding:4px}.cell{min-width:70px}.matrix th:first-child,.matrix td:first-child{min-width:140px}.footer{break-inside:avoid}main{margin-top:-20px}}
+.matrix.project-matrix{table-layout:fixed;min-width:760px}
+.matrix.project-matrix th:first-child,.matrix.project-matrix td:first-child{width:56px;min-width:56px;max-width:56px;padding-left:14px;padding-right:8px;text-align:center}
+.matrix.project-matrix th:nth-child(2){width:auto}
+.matrix.project-matrix td:nth-child(2),.matrix.project-matrix .name-button{white-space:nowrap}
+.matrix.project-matrix th:nth-child(3){width:90px}
+.matrix.project-matrix th:nth-child(4){width:95px}
+.matrix.project-matrix th:nth-child(5){width:85px}
+.matrix.project-matrix th:nth-child(6){width:140px}
 </style>
 </head>
 <body>
@@ -70,6 +78,7 @@ function renderAllMatrix(){const rows=selectedRows().filter(r=>r['Имя'].toLow
 function renderMatrix(){
  const p=state.project,all=p==='all'||p==='operations';
  const section=$('people'),head=section.querySelector('thead tr');
+ section.querySelector('table').classList.toggle('project-matrix',!all);
  const title=section.querySelector('.matrix-head h2'),subtitle=section.querySelector('.matrix-head p');
  const options=$('status').options;
  if(all){
