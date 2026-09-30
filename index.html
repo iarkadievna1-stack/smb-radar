@@ -18,6 +18,11 @@
 .matrix.project-matrix th:nth-child(4){width:95px}
 .matrix.project-matrix th:nth-child(5){width:85px}
 .matrix.project-matrix th:nth-child(6){width:140px}
+.project-team-breakdown{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.project-team-stat{background:white;border:1px solid var(--line);border-radius:12px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-left:4px solid var(--blue)}
+.project-team-stat.smb2{border-left-color:#9072c8}
+.project-team-stat h3{font-size:14px;margin-bottom:4px}.project-team-stat p{font-size:12px;color:var(--muted)}
+.project-team-fact{text-align:right;white-space:nowrap}.project-team-fact strong{font-size:28px;line-height:1.2;display:block}.project-team-fact span{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -165,7 +170,14 @@ function render(){
  rankingPanel.style.marginTop=all?'24px':'';
  if(all){main.insertBefore(rankingPanel,$('people'));renderAllSummary();renderTeams();renderMatrix();renderRanking();return;}
  document.querySelector('.two-col').appendChild(rankingPanel);
- renderSummary();renderGaps();renderRanking();renderMatrix();
+ renderSummary();renderProjectTeamBreakdown();renderGaps();renderRanking();renderMatrix();
+}
+function renderProjectTeamBreakdown(){
+ const p=state.project;
+ $('summary').insertAdjacentHTML('beforeend',`<div class="project-team-breakdown" aria-label="Результаты проекта по командам">${selectedTeams().map(t=>{
+  const team=t['Команда'],fact=value(t,p,'факт'),plan=value(t,p,'план');
+  return `<article class="project-team-stat ${team==='SMB 2'?'smb2':''}"><div><h3>${esc(team)}</h3><p>${plan>0?`План ${n(plan)} · выполнение ${n(fact/plan*100,1)}%`:'План не задан'}</p></div><div class="project-team-fact"><strong>${n(fact)}</strong><span>факт · объектов</span></div></article>`;
+ }).join('')}</div>`);
 }
 $('project').insertBefore(new Option('Все проекты','all',true,true),$('project').firstChild);
 function renderAllSummary(){
