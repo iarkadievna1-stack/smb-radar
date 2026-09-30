@@ -266,6 +266,32 @@ $('ops-to').addEventListener('change',()=>{$('ops-period').value='custom';render
 $('ops-search').addEventListener('input',renderOperations);
 renderOperations();
 </script>
+<script>
+// Stable project/team links for Wiki and bookmarks; unknown values use defaults.
+const PROJECT_LINKS={all:'all',premium:'Premium',pro:'Premium Pro',b2b:'B2B',loyalty:'Программа лояльности',children:'Детские тарифы',calls:'operations'};
+const TEAM_LINKS={all:'all',smb1:'SMB 1',smb2:'SMB 2'};
+function applyRadarLink(){
+ const params=new URLSearchParams(location.search);
+ state.project=Object.hasOwn(PROJECT_LINKS,params.get('project'))?PROJECT_LINKS[params.get('project')]:'all';
+ state.team=Object.hasOwn(TEAM_LINKS,params.get('team'))?TEAM_LINKS[params.get('team')]:'all';
+ state.managersOnly=params.get('view')==='managers'&&state.project!=='operations';
+ $('project').value=state.project;
+ document.querySelectorAll('[data-team]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.team===state.team)));
+ render();
+}
+function updateRadarLink(){
+ const url=new URL(location.href);
+ url.searchParams.set('project',Object.keys(PROJECT_LINKS).find(k=>PROJECT_LINKS[k]===state.project)||'all');
+ url.searchParams.set('team',Object.keys(TEAM_LINKS).find(k=>TEAM_LINKS[k]===state.team)||'all');
+ if(state.managersOnly)url.searchParams.set('view','managers');else url.searchParams.delete('view');
+ history.replaceState(null,'',url);
+}
+$('project').addEventListener('change',updateRadarLink);
+$('team-filter').addEventListener('click',e=>{if(e.target.closest('button'))updateRadarLink();});
+document.querySelector('.navigation').addEventListener('click',updateRadarLink);
+window.addEventListener('popstate',applyRadarLink);
+applyRadarLink();
+</script>
 
 </body>
 </html>
