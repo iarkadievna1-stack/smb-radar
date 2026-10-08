@@ -41,6 +41,52 @@ body:has(#detail[open]){overflow:hidden}
 #detail .portfolio-flow{margin-top:16px}#detail .connections-inline{margin-top:12px;padding-top:12px;border-top:1px solid #cbd8fa;color:#2853be}
 #detail .project-summary{margin-top:24px}#detail .project-summary h3{margin-bottom:10px}
 @media(max-width:480px){#detail-content{padding:0 16px 20px}#detail .dialog-top{padding:16px}#detail .dialog-top h2{font-size:20px}#detail .portfolio-flow{padding:14px}}
+
+/* Base dashboard visual language, preserved for October draft. */
+:root{--green:#187a5b;--green-bg:#e9f6ef;--amber:#946009;--amber-bg:#fff4dd;--red:#b24549;--red-bg:#fcecee}
+.matrix-head{padding:18px}
+.matrix-head h2{font-size:17px}
+.matrix-head p{font-size:11px;color:var(--muted);margin-top:3px}
+.search{flex:1;min-width:130px}
+.legend{padding-left:18px;gap:10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.swatch{width:9px;height:9px;display:inline-block;border-radius:3px}
+.matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+.matrix th{padding:14px 13px;text-align:left;background:#fbfcfe;color:var(--muted);font-size:10px;font-weight:550;border-bottom:1px solid var(--line);white-space:nowrap}
+.matrix td{padding:4px}
+.matrix th:first-child,.matrix td:first-child{min-width:140px}
+.matrix th:nth-child(2){width:75px}
+.matrix tr:last-child td{border-bottom:0}
+.matrix tr:hover td{background:#fafbfe}
+.name-button{border:0;background:none;text-align:left;font-size:12px;font-weight:550;padding:5px 0}
+.name-button:hover{color:var(--blue)}
+.mini-team{font-size:10px;color:#78869b;white-space:nowrap}
+.cell{min-width:70px}
+.cell strong{font-size:12px;font-weight:650}
+.cell small{font-size:10px;opacity:.8;white-space:nowrap}
+.good{background:var(--green-bg);color:var(--green)}
+.near{background:var(--amber-bg);color:var(--amber)}
+.behind{background:var(--red-bg);color:var(--red)}
+.noplan{background:#f2f4f7;color:#7c8798}
+.matrix-note{padding:13px 23px;border-top:1px solid var(--line);font-size:10px;color:var(--muted)}
+.detail-metric{border-top:1px solid var(--line);padding:15px 0;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.detail-metric strong{font-size:14px}
+.snapshot-row{display:flex;justify-content:space-between;font-size:12px;margin-top:12px}
+
+#project-matrix{padding:0;border-radius:18px;overflow:hidden;background:white;border:1px solid var(--line)}
+#project-matrix .matrix{min-width:1000px}#project-matrix .matrix th,#project-matrix .matrix td{text-align:left}
+#project-matrix .matrix td{padding-top:8px;padding-bottom:8px}#project-matrix .matrix th:last-child,#project-matrix .matrix td:last-child{padding-right:23px}
+.matrix .cell small,#detail .cell small{display:inline;margin:0;text-align:right}.matrix .cell strong,#detail .cell strong{display:inline}
+.matrix .name{border:0;background:none;font-size:12px;font-weight:550;padding:5px 0;text-align:left;white-space:nowrap}
+.matrix tbody tr:nth-child(even){background:#fafbfe}.matrix .cell{min-width:130px}
+#detail{width:min(460px,100vw)}#detail .dialog-top{padding:24px 30px 16px}#detail-content{padding:0 30px 24px}#detail-team{padding:14px 30px 0;font-size:12px}
+#detail .portfolio-flow{background:#f0f4ff;padding:19px;border-radius:13px;margin-top:24px}#detail .portfolio-flow h3{font-size:13px;color:#3f609c}
+#detail .metric{display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:12px;padding:10px 0;margin:0}#detail .metric strong{font-size:14px}
+#detail .portfolio-flow .metric{border:0;padding:0;margin-top:12px}#detail .portfolio-flow .portfolio-result,#detail .portfolio-flow .connections-inline{border-top:1px solid #dbe3f4;padding-top:12px}
+#detail .connection-result{font-size:12px;padding:16px;border-radius:13px}#detail .metric-caption{font-size:10px;line-height:1.6;margin-top:10px}
+#detail h3{font-size:13px;margin-top:20px}#detail .portfolio-flow h3{margin-top:0}#detail .project-summary .metric{border-top:1px solid var(--line);padding:15px 0}
+#detail .cell{min-width:170px}#detail .detail-note{font-size:10px;padding:0 30px 24px}
+@media(max-width:750px){#project-matrix .matrix-head{flex-wrap:wrap;padding:18px}.legend{padding-left:18px;gap:10px}#detail-content{padding-left:20px;padding-right:20px}}
 </style></head><body>
 <header><div class="wrap"><div class="brand-row"><div class="brand"><span class="mark">↗</span>Путешествия <span style="color:#627791;font-weight:400">/</span> Развитие отелей</div></div><div class="hero"><div><div class="eyebrow">Ежедневный обзор результатов</div><h1>Команда в фокусе</h1><p class="subtitle">Выполнение планов, приоритеты и движение к цели — на одном экране.</p></div><div class="month-stamp"><strong>Октябрь 2026</strong><small>SMB · развитие отелей</small></div></div></div></header>
 <main class="wrap"><nav class="month-tabs" aria-label="Месяц отчёта"><a href="october-2026-draft.html" aria-current="page">Октябрь · драфт</a><a href="september-2026-closed.html">Сентябрь 2026</a></nav>
@@ -57,7 +103,7 @@ body:has(#detail[open]){overflow:hidden}
 <section id="project-overview" aria-label="Сводка"><div id="summary" class="summary"></div><h2 class="section-title">Результаты команд</h2><div id="teams" class="team-grid"></div></section>
 <section id="portfolio-review" class="card" style="margin:18px 0"><h2>Портфели · 30.09 → 06.10</h2><p class="muted">Промежуточный срез, не закрытие октября. Текущее распределение источника. Premium Pro входит в Premium.</p>
 <div class="premium-rule"><span class="approval">ЛОГИКА PREMIUM СОГЛАСОВАНА · 07.10</span><h3>Партнёр-код нейтрален для KPI-портфеля</h3><p><strong>KPI-портфель = фактический портфель + выпадения по партнёр-коду − возвраты по партнёр-коду.</strong></p><p>Выпадение не уменьшает KPI-портфель, возврат не увеличивает его. Обычные подключения, восстановления и отключения меняют портфель.</p><p><strong>Изменение KPI-портфеля = KPI-портфель − база на 30.09.</strong></p><p>Для выполнения плана Premium считаем отдельно <strong>реальные новые подключения</strong>. Возвраты и апгрейды не являются новыми подключениями.</p><p class="metric-caption">Пример Силоновой на 06.10: фактически 186 + 2 выпадения ПК − 0 возвратов ПК = <strong>188</strong>. К базе 187: <strong>+1</strong>. Новых подключений для плана: <strong>2 из 4</strong>.</p></div>
-<div id="portfolio-totals" class="team-grid" style="margin-top:16px"></div><details><summary>Все менеджеры · три показателя Premium</summary><div class="table-scroll"><table><thead><tr><th>Менеджер</th><th>Premium · база 30.09</th><th>Фактически 06.10</th><th>KPI-портфель 06.10</th><th>Изменение KPI-портфеля</th><th>Подключения · план</th><th>Pro · 30.09 → 06.10</th><th>B2B · 30.09 → 06.10</th><th>B2B · чистый прирост</th></tr></thead><tbody id="portfolio-rows"></tbody></table></div></details><p class="muted">Разбор по менеджеру — в карточке под матрицей. По B2B показано изменение двух снимков; валовые подключения и отток ещё требуют объектной сверки. Логика Premium согласована, факты драфта ожидают итоговой проверки.</p></section><section id="project-matrix" class="matrix-card"><div class="matrix-head"><div><h2 id="matrix-title">Матрица результатов</h2><p>Нажми на имя, чтобы открыть свою карточку.</p></div><input id="search" class="search" placeholder="Найти менеджера" aria-label="Поиск менеджера"></div><div class="table-scroll"><table><thead id="matrix-head"></thead><tbody id="matrix-body"></tbody></table></div><p id="matrix-note" class="matrix-note"></p></section>
+<div id="portfolio-totals" class="team-grid" style="margin-top:16px"></div><details><summary>Все менеджеры · три показателя Premium</summary><div class="table-scroll"><table><thead><tr><th>Менеджер</th><th>Premium · база 30.09</th><th>Фактически 06.10</th><th>KPI-портфель 06.10</th><th>Изменение KPI-портфеля</th><th>Подключения · план</th><th>Pro · 30.09 → 06.10</th><th>B2B · 30.09 → 06.10</th><th>B2B · чистый прирост</th></tr></thead><tbody id="portfolio-rows"></tbody></table></div></details><p class="muted">Разбор по менеджеру — в карточке под матрицей. По B2B показано изменение двух снимков; валовые подключения и отток ещё требуют объектной сверки. Логика Premium согласована, факты драфта ожидают итоговой проверки.</p></section><section id="project-matrix" class="matrix-card"><div class="matrix-head"><div><h2 id="matrix-title">Матрица результатов</h2><p>Все направления рядом. Нажми на имя, чтобы открыть свою карточку.</p></div><input id="search" class="search" placeholder="Найти менеджера" aria-label="Поиск менеджера"></div><div class="legend"><span><i class="swatch" style="background:#83c4a3"></i>≥ 100% · выполнено</span><span><i class="swatch" style="background:#e7c276"></i>80–99% · близко</span><span><i class="swatch" style="background:#dea0a7"></i>&lt; 80% · ниже плана</span><span><i class="swatch" style="background:#c9d0dc"></i>Без индивидуального плана / нет данных</span></div><div class="table-scroll"><table class="matrix"><thead id="matrix-head"></thead><tbody id="matrix-body"></tbody></table></div><p id="matrix-note" class="matrix-note"></p></section>
 <section id="operations" hidden>
 <h2 class="section-title">Операционные метрики · звонки</h2><p class="muted">Октябрь 2026 · данные по 6 октября, 18:59:15 МСК</p>
 <div class="filters" style="margin-top:18px">
@@ -89,7 +135,7 @@ function total(team,p){const rows=D.managers.filter(r=>r['Группа']===team)
 function cell(v){return known(v)?`<strong>${n(v)}</strong>`:'<span class="muted">—</span><small>Нет данных</small>';}
 
 function planNote(plan,fact){return known(plan)?`План ${n(plan)} · ${known(fact)?n(fact/plan*100)+'%':'Выполнение —'}`:'Справочно · без плана';}
-function projectCell(r,p){return cell(metric(r,p))+`<small>${planNote(r[p+', план'],metric(r,p))}</small>`;}
+function projectCell(r,p){const f=metric(r,p),plan=r[p+', план'],hasPlan=known(plan)&&plan>0,q=known(f)&&hasPlan?f/plan:null,cl=q===null?'noplan':q>=1?'good':q>=.8?'near':'behind';return `<div class="cell ${cl}" title="${esc(p)}: ${known(f)?'факт '+n(f):'Нет данных'}${hasPlan?', план '+n(plan):', без плана'}"><strong>${known(f)?n(f):'—'}${hasPlan?` <span style="font-weight:400;opacity:.55">/ ${n(plan)}</span>`:''}</strong><small>${!known(f)?'Нет данных':q===null?'без плана':n(q*100)+'%'}</small></div>`;}
 
 
 function signed(v){return v>0?'+'+n(v):n(v);}
@@ -113,7 +159,7 @@ function render(){
  $('matrix-title').textContent=state.project==='all'?'Матрица результатов':state.project+' · менеджеры';
  $('matrix-head').innerHTML=`<tr><th>Менеджер</th><th>Команда</th>${projects.map(p=>`<th>${esc(p)}</th>`).join('')}</tr>`;
  const rows=people.filter(r=>r['Имя'].toLowerCase().replaceAll('ё','е').includes(state.query.toLowerCase().replaceAll('ё','е'))).sort((a,b)=>{if(state.project!=='all'){const av=metric(a,state.project),bv=metric(b,state.project);if(known(av)!==known(bv))return known(av)?-1:1;if(known(av)&&av!==bv)return bv-av;}return a['Имя'].localeCompare(b['Имя'],'ru');});
- $('matrix-body').innerHTML=rows.length?rows.map(r=>`<tr><td><button class="name" data-name="${esc(r['Имя'])}">${esc(r['Имя'])}</button></td><td>${esc(r['Группа'])}</td>${projects.map(p=>`<td>${projectCell(r,p)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${projects.length+2}" class="empty">Менеджеры не найдены.</td></tr>`;
+ $('matrix-body').innerHTML=rows.length?rows.map(r=>`<tr><td><button class="name" data-name="${esc(r['Имя'])}">${esc(r['Имя'])}</button></td><td><span class="mini-team">${esc(r['Группа'])}</span></td>${projects.map(p=>`<td>${projectCell(r,p)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${projects.length+2}" class="empty">Менеджеры не найдены.</td></tr>`;
  $('matrix-note').textContent=`Показано ${rows.length} из ${people.length} менеджеров. Предварительные факты: Premium — реальные подключения, B2B — чистый прирост. Premium Pro — справочно в портфелях. Паритет и доступность ожидают данных. ${state.project==='all'?'Сортировка по фамилии.':'Сортировка по факту; при равенстве — по фамилии. Менеджеры без данных — в конце.'}`;
 }
 function applyLink(){const p=new URLSearchParams(location.search);state.project=Object.hasOwn(links,p.get('project'))?links[p.get('project')]:'all';state.team=Object.hasOwn(teamLinks,p.get('team'))?teamLinks[p.get('team')]:'all';render();}
