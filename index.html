@@ -27,6 +27,8 @@ h1{font-size:34px;letter-spacing:-1.2px;font-weight:650}
 .segmented button{border:0;background:transparent;padding:7px 14px;border-radius:6px;color:#6c7890;font-size:12px;font-weight:600;white-space:nowrap}
 .segmented button[aria-pressed=true]{background:white;color:var(--ink);box-shadow:0 1px 4px #18233412}
 @media(max-width:750px){.filters{padding:14px;gap:12px}.filters .filter{justify-content:space-between;width:100%}}
+
+#ops-personal[hidden]{display:none}#ops-personal{margin:20px 0;scroll-margin-top:24px}.ops-personal-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;padding:0 20px 20px}.ops-daily-scroll{max-height:480px;overflow:auto}.ops-daily-scroll table{width:100%;min-width:560px}.ops-daily-scroll th{position:sticky;top:0;background:var(--paper);z-index:1}.ops-personal-summary{align-self:start;background:var(--paper);border-radius:14px;padding:18px}.ops-personal-summary h3{margin-bottom:12px}.ops-personal-summary .muted{font-size:12px;margin-top:12px}.ops-personal-name{border:0;background:none;padding:0;color:inherit;text-align:left;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}.ops-personal-name:hover{color:#315fdb}@media(max-width:800px){.ops-personal-layout{grid-template-columns:1fr}.ops-personal-summary{grid-row:1}}
 </style></head><body>
 <header><div class="wrap"><div class="brand-row"><div class="brand"><span class="mark">↗</span>Путешествия <span style="color:#627791;font-weight:400">/</span> Развитие отелей</div></div><div class="hero"><div><div class="eyebrow">Ежедневный обзор результатов</div><h1>Команда в фокусе</h1><p class="subtitle">Выполнение планов, приоритеты и движение к цели — на одном экране.</p></div><div class="month-stamp"><strong>Октябрь 2026</strong><small>SMB · развитие отелей</small></div></div></div></header>
 <main class="wrap"><nav class="month-tabs" aria-label="Месяц отчёта"><a href="october-2026.html" aria-current="page">Октябрь 2026</a><a href="september-2026-closed.html">Сентябрь 2026</a></nav>
@@ -42,6 +44,11 @@ h1{font-size:34px;letter-spacing:-1.2px;font-weight:650}
 <label class="filter">Сотрудник <select id="ops-employee" class="select"><option value="all">Все сотрудники</option></select></label>
 </div>
 <div id="ops-summary" class="summary"></div><p id="ops-count" class="muted"></p>
+
+<section id="ops-personal" class="matrix-card" hidden aria-labelledby="ops-personal-title">
+<div class="matrix-head"><div><h2 id="ops-personal-title"></h2><p id="ops-personal-period" class="muted"></p></div><button id="ops-personal-close" class="select" type="button">Все сотрудники</button></div>
+<div class="ops-personal-layout"><div class="table-scroll ops-daily-scroll" tabindex="0" role="region" aria-label="Звонки менеджера по дням"><table><thead><tr><th>Дата</th><th>Звонки</th><th>С дозвоном</th><th>Дозвон</th><th>Время разговоров</th></tr></thead><tbody id="ops-personal-days"></tbody></table></div><aside id="ops-personal-summary" class="ops-personal-summary"></aside></div>
+</section>
 <h3 class="section-title">Звонки по командам</h3><div id="ops-teams" class="team-grid"></div>
 <section class="card"><h3>Топ-5 по времени разговоров</h3><p class="muted">Среднее время на день со звонками</p><div id="ops-leaders" style="margin-top:12px"></div></section>
 <section class="matrix-card"><div class="matrix-head"><h2>Активность менеджеров</h2><label>Сортировка <select id="ops-sort" class="select"><option value="seconds">Время разговоров</option><option value="calls">Наборов в день</option><option value="reach">Дозвон</option></select></label></div><div class="table-scroll"><table><thead><tr><th>Менеджер</th><th>Команда</th><th>Время / день</th><th>Наборов / день</th><th>Дозвон</th><th>Дней со звонками</th></tr></thead><tbody id="ops-body"></tbody></table></div></section>
@@ -91,6 +98,19 @@ const OC=JSON.parse(document.getElementById('operations-daily').textContent);
 const ocClock=v=>{const s=Math.round(v);return `${String(Math.floor(s/3600)).padStart(2,'0')}:${String(Math.floor(s/60)%60).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;};
 const ocNum=(v,d=1)=>Number(v).toLocaleString('ru-RU',{maximumFractionDigits:d});
 function ocStats(rows){const calls=rows.reduce((s,r)=>s+r.calls,0),connected=rows.reduce((s,r)=>s+r.connected,0),seconds=rows.reduce((s,r)=>s+r.seconds,0),employees=new Set(rows.map(r=>r.name)).size,days=new Set(rows.map(r=>r.date)).size;return {calls,connected,seconds,employees,days,avgCalls:employees&&days?calls/employees/days:null,avgSeconds:employees&&days?seconds/employees/days:null,reach:calls?100*connected/calls:null};}
+
+function renderPersonalCalls(filtered,st,from,to,valid,name){
+ const panel=$('ops-personal');panel.hidden=name==='all';if(panel.hidden)return;
+ const date=s=>s.split('-').reverse().join('.');
+ $('ops-personal-title').textContent=name+' · по дням';
+ $('ops-personal-period').textContent=valid?date(from)+' — '+date(to):'Выберите корректный период';
+ const byDay=new Map();for(const r of filtered){const a=byDay.get(r.date)||{calls:0,connected:0,seconds:0};a.calls+=r.calls;a.connected+=r.connected;a.seconds+=r.seconds;byDay.set(r.date,a);}
+ const days=[];if(valid){const day=new Date(from+'T00:00:00Z');for(let i=0;i<32;i++){const key=day.toISOString().slice(0,10);if(key>to)break;const a=byDay.get(key);days.push(a?`<tr><td>${date(key)}</td><td><strong>${ocNum(a.calls,0)}</strong></td><td>${ocNum(a.connected,0)}</td><td>${a.calls?ocNum(100*a.connected/a.calls,2)+'%':'—'}</td><td>${ocClock(a.seconds)}</td></tr>`:`<tr><td>${date(key)}</td><td colspan="4" class="muted">Нет учитываемых данных</td></tr>`);day.setUTCDate(day.getUTCDate()+1);}}
+ $('ops-personal-days').innerHTML=days.join('')||'<tr><td colspan="5" class="empty">Выберите корректный период.</td></tr>';
+ const metric=(label,value)=>`<div class="metric"><span>${label}</span><strong>${value}</strong></div>`;
+ $('ops-personal-summary').innerHTML='<h3>За выбранный интервал</h3>'+metric('Всего звонков',ocNum(st.calls,0))+metric('С дозвоном',ocNum(st.connected,0))+metric('Время разговоров',ocClock(st.seconds))+metric('Учтено дней',String(st.days))+'<h3 style="margin-top:20px">Среднее за день</h3>'+metric('Звонки',st.avgCalls===null?'—':ocNum(st.avgCalls))+metric('Время разговоров',st.avgSeconds===null?'—':ocClock(st.avgSeconds))+metric('Дозвон за интервал',st.reach===null?'—':ocNum(st.reach,2)+'%')+'<p class="muted">Средние — по дням с учтёнными звонками. Дни без данных и исключённые дни не входят в среднее. Дозвон — доля успешных звонков за весь интервал.</p>';
+}
+
 function renderOctOperations(){
  const sel=$('ops-employee'),old=sel.value;
  const names=[...new Set(OC.rows.filter(r=>state.team==='all'||r.team===state.team).map(r=>r.name))].sort((a,b)=>a.localeCompare(b,'ru'));
@@ -101,18 +121,21 @@ function renderOctOperations(){
  $('ops-summary').innerHTML=cards.map(([label,v])=>`<article class="stat"><div class="stat-label">${label}</div><div class="stat-number">${v}</div><div class="stat-foot">Выбранный период и сотрудники</div></article>`).join('');
  const date=s=>s.split('-').reverse().join('.');
  $('ops-count').textContent=valid?`${date(from)} — ${date(to)} · ${st.employees} сотрудников со звонками · ${ocNum(st.calls,0)} наборов`:`Выберите корректный период: ${date(OC.start)} — ${date(OC.end)}.`;
+ renderPersonalCalls(filtered,st,from,to,valid,sel.value);
  $('ops-teams').innerHTML=['SMB 1','SMB 2'].filter(t=>state.team==='all'||t===state.team).map(t=>{const a=ocStats(filtered.filter(r=>r.team===t));return `<article class="card"><h3>${t}</h3><div class="metric"><span>Звонки</span><strong>${ocNum(a.calls,0)}</strong></div><div class="metric"><span>Дозвон</span><strong>${a.reach===null?'—':ocNum(a.reach,2)+'%'}</strong></div><div class="metric"><span>Среднее время / день / сотрудник</span><strong>${a.avgSeconds===null?'—':ocClock(a.avgSeconds)}</strong></div></article>`;}).join('');
  const grouped=new Map();for(const r of filtered){if(!grouped.has(r.name))grouped.set(r.name,[]);grouped.get(r.name).push(r);}
  const rows=[...grouped].map(([name,values])=>{const a=ocStats(values);return {name,team:values[0].team,days:a.days,calls:a.calls/a.days,seconds:a.seconds/a.days,reach:a.reach};});
  const leaders=[...rows].sort((a,b)=>b.seconds-a.seconds||a.name.localeCompare(b.name,'ru')).slice(0,5);
  $('ops-leaders').innerHTML=leaders.length?leaders.map((r,i)=>`<div class="metric"><span>${i+1}. ${esc(r.name)} <small style="text-align:left">${r.team}</small></span><strong>${ocClock(r.seconds)}</strong></div>`).join(''):'<p class="empty">За выбранный период звонков нет.</p>';
  const sort=$('ops-sort').value;rows.sort((a,b)=>b[sort]-a[sort]||a.name.localeCompare(b.name,'ru'));
- $('ops-body').innerHTML=rows.length?rows.map(r=>`<tr><td>${esc(r.name)}</td><td>${r.team}</td><td><strong>${ocClock(r.seconds)}</strong></td><td>${ocNum(r.calls)}</td><td>${ocNum(r.reach,2)}%</td><td>${r.days}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">За выбранный период звонков нет.</td></tr>';
+ $('ops-body').innerHTML=rows.length?rows.map(r=>`<tr><td><button type="button" class="ops-personal-name" data-ops-name="${esc(r.name)}">${esc(r.name)}</button></td><td>${r.team}</td><td><strong>${ocClock(r.seconds)}</strong></td><td>${ocNum(r.calls)}</td><td>${ocNum(r.reach,2)}%</td><td>${r.days}</td></tr>`).join(''):'<tr><td colspan="6" class="empty">За выбранный период звонков нет.</td></tr>';
 }
 function ocPreset(){const mode=$('ops-period').value;let from=$('ops-from').value||OC.end,to=from;if(mode==='month'){from=OC.start;to=OC.end;}else if(mode==='day'){from=OC.end;to=from;}else if(mode==='week'){const d=new Date(OC.end+'T00:00:00Z');d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);from=d.toISOString().slice(0,10);d.setUTCDate(d.getUTCDate()+6);to=d.toISOString().slice(0,10);from=from<OC.start?OC.start:from;to=to>OC.end?OC.end:to;}else return;$('ops-from').value=from;$('ops-to').value=to;renderOctOperations();}
 $('ops-period').addEventListener('change',ocPreset);
 for(const id of ['ops-from','ops-to'])$(id).addEventListener('change',()=>{$('ops-period').value='custom';renderOctOperations();});
 for(const id of ['ops-employee','ops-sort'])$(id).addEventListener('change',renderOctOperations);
+$('ops-personal-close').addEventListener('click',()=>{$('ops-employee').value='all';renderOctOperations();});
+$('ops-body').addEventListener('click',e=>{const b=e.target.closest('[data-ops-name]');if(!b)return;$('ops-employee').value=b.dataset.opsName;renderOctOperations();$('ops-personal').scrollIntoView({behavior:'smooth',block:'start'});});
 
 window.addEventListener('popstate',applyLink);applyLink();
 </script></body></html>
